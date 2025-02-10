@@ -13,8 +13,8 @@ class TodoAppE2ETest(unittest.TestCase):
 
     def setUp(self):
         """Initialise Webdriver"""
-        service = Service(executable_path="./chromedriver-win64/chromedriver.exe")
-        self.driver = webdriver.Chrome(service=service)  # Initialisation
+        # service = Service(executable_path="./chromedriver-win64/chromedriver.exe")
+        self.driver = webdriver.Chrome()  # Initialisation
 
     def test_login(self):
         """Test user login with Basic Authentication"""
