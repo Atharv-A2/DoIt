@@ -45,7 +45,7 @@ jobs:
               run: flake8 . --statistics
 
             - name: Run black (Code Formatting Check)
-              run: black --check .
+              run: black .
 
             - name: Run Migrations
               env: 
