@@ -1,7 +1,8 @@
 import time
 import unittest
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
+
+# from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 
 # Login Credentials for testing purpose only.
