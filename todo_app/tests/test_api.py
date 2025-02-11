@@ -2,6 +2,7 @@ from rest_framework.test import APITestCase, APIClient
 from django.urls import reverse
 from django.contrib.auth.models import User
 from todo_app.models import Todo
+from django.utils import timezone
 
 
 class TodoAPITest(APITestCase):
@@ -16,6 +17,8 @@ class TodoAPITest(APITestCase):
             title="Integration Test",
             description="Testing API endpoints",
             status="OPEN",
+            due_date=timezone.now(),
+            tags="Django, Testing, API",
             user=self.user,
         )
 
@@ -36,6 +39,7 @@ class TodoAPITest(APITestCase):
             "title": "New Task",
             "description": "Test API create",
             "status": "WORKING",
+            "tags": "Django, Testing, API",
         }
 
         response = self.client.post(self.todo_list_url, data, format="json")
@@ -60,6 +64,7 @@ class TodoAPITest(APITestCase):
             "title": "Updated Task",
             "description": "Updated Desc",
             "status": "COMPLETED",
+            "tags": "Django, Testing, API",
         }
         response = self.client.put(self.todo_url, updated_data, format="json")
         # print(response.content)

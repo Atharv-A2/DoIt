@@ -1,8 +1,8 @@
 import time
 import unittest
 from selenium import webdriver
+from django.contrib.auth.models import User
 
-# from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 
 # Login Credentials for testing purpose only.
@@ -15,11 +15,44 @@ class TodoAppE2ETest(unittest.TestCase):
     def setUp(self):
         """Initialise Webdriver"""
         options = webdriver.ChromeOptions()  # Driver Setting for a headless Webdriver
-        options.add_argument("--headless")   # Run in Headless mode
+        options.add_argument("--headless")  # Run in Headless mode
         # options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")  # Disble the Shared Memory
+        options.add_argument("--disable-dev-shm-usage")  # Disable the Shared Memory
 
         self.driver = webdriver.Chrome(options=options)  # Initialisation
+
+    def test_new_user_register(self):
+        """Test the Registration of New User"""
+
+        driver = self.driver
+        driver.get("http://127.0.0.1:8000/api/register/")  # Registration URL
+
+        # Find the username box and send in the username
+        username = driver.find_element(By.NAME, "username")
+        username.send_keys("testuser")
+
+        # Find the password box and send in the password
+        password = driver.find_element(By.NAME, "password")
+        password.send_keys("testpass")
+
+        # Finding the Form Action
+        form_action = driver.find_element(By.CLASS_NAME, "form-actions")
+
+        # Finding the POST button to feed the user to the db
+        post_button = form_action.find_element(
+            By.CLASS_NAME, "btn.btn-primary.js-tooltip"
+        )
+        post_button.click()
+
+        time.sleep(2)
+        # Verify the creation of new user
+        self.assertIn("201", driver.page_source)
+        print("New User is CREATED!")
+
+        # Deleting the Test User created from the DB
+        user = User.objects.filter(username="testuser")
+        user.delete()
+        driver.close()
 
     def test_login(self):
         """Test user login with Basic Authentication"""
@@ -93,7 +126,7 @@ class TodoAppE2ETest(unittest.TestCase):
         try:
             task_id = int(
                 task_id[3].text
-            )                         # Fetching the ID of the first task to update
+            )  # Fetching the ID of the first task to update
             # print(task_id)          # and converting it to integer
         except IndexError:
             print("No task present to update")
@@ -147,7 +180,7 @@ class TodoAppE2ETest(unittest.TestCase):
         # print(delete_form_btn.text)
         delete_form_btn.click()
 
-        time.sleep(3)
+        time.sleep(4)
         # Verifying the deletion of the task
         self.assertIn("204 No Content", driver.page_source)
         print(f"Task with the id:{task_id} is DELETED!")
