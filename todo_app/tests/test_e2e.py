@@ -15,7 +15,10 @@ class TodoAppE2ETest(unittest.TestCase):
     def setUp(self):
         """Initialise Webdriver"""
         options = webdriver.ChromeOptions()  # Driver Setting for a headless Webdriver
-        options.add_argument("--headless")
+        options.add_argument("--headless")   # Run in Headless mode
+        # options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+
         self.driver = webdriver.Chrome(options=options)  # Initialisation
 
     def test_login(self):
@@ -90,8 +93,8 @@ class TodoAppE2ETest(unittest.TestCase):
         try:
             task_id = int(
                 task_id[3].text
-            )  # Fetching the ID of the first task to update
-            # print(task_id)                           # and converting it to integer
+            )                         # Fetching the ID of the first task to update
+            # print(task_id)          # and converting it to integer
         except IndexError:
             print("No task present to update")
             return
