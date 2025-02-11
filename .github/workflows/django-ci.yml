@@ -55,10 +55,10 @@ jobs:
                 python manage.py makemigrations
                 python manage.py migrate
 
-            # - name: Run Django Server
-            #   run: |
-            #     python manage.py runserver
-            #     sleep 5     # Give some time to server to start
+            - name: Run Django Server
+              run: |
+                python manage.py runserver 0.0.0.0:8000 &
+                sleep 5     # Give some time to server to start
 
             - name: Run tests
               run: |
