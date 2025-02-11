@@ -36,6 +36,9 @@ jobs:
               with:
                   python-version: "3.12"
 
+            - name: Set up ChromeDriver
+              uses: actions/setup-chrome-driver@v1
+
             - name: Install dependencies
               run: | 
                 python -m pip install --upgrade pip
