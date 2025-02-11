@@ -55,6 +55,10 @@ jobs:
                 python manage.py makemigrations
                 python manage.py migrate
 
+            - name: Run Django Server
+              run: |
+                python manage.py runserver
+
             - name: Run tests
               run: |
                 python manage.py test
