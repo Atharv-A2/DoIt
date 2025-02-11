@@ -12,20 +12,20 @@ jobs:
     test:
         runs-on: ubuntu-latest
 
-        # services:
-        #     postgres:
-        #         image: postgres:13
-        #         env:
-        #             POSTGRES_DB: test_db
-        #             POSTGRES_USER: postgres
-        #             POSTGRES_PASSWORD: postgres
-        #         ports:
-        #             - 5432:5432
-        #         options: >-
-        #             --health-cmd="pg_isready -U postgres"
-        #             --health-interval=10s
-        #             --health-timeout=5s
-        #             --health-retries=5
+        services:
+            postgres:
+                image: postgres:13
+                env:
+                    POSTGRES_DB: test_db
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: postgres
+                ports:
+                    - 5432:5432
+                options: >-
+                    --health-cmd="pg_isready -U postgres"
+                    --health-interval=10s
+                    --health-timeout=5s
+                    --health-retries=5
 
         steps:
             - name: Checkout code
@@ -35,9 +35,6 @@ jobs:
               uses: actions/setup-python@v5
               with:
                   python-version: "3.12"
-
-            # - name: Set up ChromeDriver
-            #   uses: actions/setup-chrome-driver@v1
 
             - name: Install dependencies
               run: | 
@@ -54,7 +51,9 @@ jobs:
               run: |
                 python manage.py makemigrations
                 python manage.py migrate
-
+              env:
+                  DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+                  
             - name: Run Django Server
               run: |
                 python manage.py runserver 0.0.0.0:8000 &
@@ -63,3 +62,5 @@ jobs:
             - name: Run tests
               run: |
                 python manage.py test
+              env:
+                  DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
