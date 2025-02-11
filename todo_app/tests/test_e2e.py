@@ -17,7 +17,7 @@ class TodoAppE2ETest(unittest.TestCase):
         options = webdriver.ChromeOptions()  # Driver Setting for a headless Webdriver
         options.add_argument("--headless")   # Run in Headless mode
         # options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--disable-dev-shm-usage")  # Disble the Shared Memory
 
         self.driver = webdriver.Chrome(options=options)  # Initialisation
 
