@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from selenium.webdriver.common.by import By
 
 # Login Credentials for testing purpose only.
-username = "test"
+username = "testing"
 password = "test"
 
 
@@ -17,23 +17,26 @@ class TodoAppE2ETest(unittest.TestCase):
         options = webdriver.ChromeOptions()  # Driver Setting for a headless Webdriver
         options.add_argument("--headless")  # Run in Headless mode
         # options.add_argument("--no-sandbox")
+        options.add_argument("--disable-gpu")  # Disable GPU specially for headless mode
         options.add_argument("--disable-dev-shm-usage")  # Disable the Shared Memory
 
         self.driver = webdriver.Chrome(options=options)  # Initialisation
 
-    def test_new_user_register(self):
+    def test_a_new_user_register(self):
         """Test the Registration of New User"""
 
         driver = self.driver
         driver.get("http://127.0.0.1:8000/api/register/")  # Registration URL
 
+        # print(f"TEST_USER_REGISTER(Page Source) - \n{driver.page_source}")
+
         # Find the username box and send in the username
         username = driver.find_element(By.NAME, "username")
-        username.send_keys("testuser")
+        username.send_keys("testing")
 
         # Find the password box and send in the password
         password = driver.find_element(By.NAME, "password")
-        password.send_keys("testpass")
+        password.send_keys("test")
 
         # Finding the Form Action
         form_action = driver.find_element(By.CLASS_NAME, "form-actions")
@@ -49,12 +52,9 @@ class TodoAppE2ETest(unittest.TestCase):
         self.assertIn("201", driver.page_source)
         print("New User is CREATED!")
 
-        # Deleting the Test User created from the DB
-        user = User.objects.filter(username="testuser")
-        user.delete()
         driver.close()
 
-    def test_login(self):
+    def test_b_login(self):
         """Test user login with Basic Authentication"""
         driver = self.driver
         driver.get("http://127.0.0.1:8000/api/todo/")
@@ -63,6 +63,7 @@ class TodoAppE2ETest(unittest.TestCase):
         driver.get(f"http://{username}:{password}@127.0.0.1:8000/api/todo/")
 
         time.sleep(2)
+        # print(f"TEST_LOGIN(Page Source) - \n{driver.page_source}")
 
         # Check if login was successfull by looking for some expected Text
         self.assertIn("Todo List Create", driver.page_source)
@@ -74,6 +75,8 @@ class TodoAppE2ETest(unittest.TestCase):
 
         driver = self.driver
         driver.get(f"http://{username}:{password}@localhost:8000/api/todo/")
+
+        # print(f"TEST_CREATE_TASK(Page Source) - \n{driver.page_source}")
 
         # Find the "Title" box and fill it with title of the task
         title_box = driver.find_element(By.NAME, "title")
@@ -101,17 +104,19 @@ class TodoAppE2ETest(unittest.TestCase):
         print("New Task is CREATED!")
         driver.close()
 
-    def test_view_task_list(self):
+    def test_task_list_view(self):
         """Test to the view the List of To-Do for that User"""
 
         driver = self.driver
         driver.get(f"http://{username}:{password}@localhost:8000/api/todo/")
 
         time.sleep(2)
+        # print(f"TEST_VIEW_TASK_LIST(Page Source) - \n{driver.page_source}")
 
         # Verify that at least 1 task is present
         self.assertIn("timestamp", driver.page_source, "No To-do found!")
         print("All the Task for the user are LISTED!")
+
         driver.close()
 
     def test_update_and_delete_task(self):
@@ -120,6 +125,8 @@ class TodoAppE2ETest(unittest.TestCase):
         driver = self.driver
         driver.get(f"http://{username}:{password}@localhost:8000/api/todo/")
 
+        # print(f"TEST_UPDATE_AND_DELETE_TASK(Page Source) - \n{driver.page_source}")
+
         # Finding the tasks id to update
         task_id = driver.find_elements(By.CLASS_NAME, "lit")
 
@@ -127,13 +134,15 @@ class TodoAppE2ETest(unittest.TestCase):
             task_id = int(
                 task_id[3].text
             )  # Fetching the ID of the first task to update
-            print(task_id)          # and converting it to integer
+            # print(task_id)          # and converting it to integer
         except IndexError:
             print("No task present to update")
             return
 
         # Visiting the Task with the task_id to perform updation and deletion
         driver.get(f"http://{username}:{password}@localhost:8000/api/todo/{task_id}")
+
+        # print(f"TEST_DELETE_TASK(Page Source) - \n{driver.page_source}")
 
         # Finding the title box and fill it with title of the task
         title_box = driver.find_element(By.NAME, "title")
@@ -189,4 +198,10 @@ class TodoAppE2ETest(unittest.TestCase):
         # Verifying the deletion of the task
         self.assertIn("204 No Content", driver.page_source)
         print(f"Task with the id:{task_id} is DELETED!")
+
+        # Deleting the Test User created from the DB
+        user = User.objects.filter(username=username)
+        user.delete()
+        print("The Test User is also DELETED!")
+
         driver.close()
