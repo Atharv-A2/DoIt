@@ -127,7 +127,7 @@ class TodoAppE2ETest(unittest.TestCase):
             task_id = int(
                 task_id[3].text
             )  # Fetching the ID of the first task to update
-            # print(task_id)          # and converting it to integer
+            print(task_id)          # and converting it to integer
         except IndexError:
             print("No task present to update")
             return
@@ -139,6 +139,9 @@ class TodoAppE2ETest(unittest.TestCase):
         title_box = driver.find_element(By.NAME, "title")
         title_box.clear()
         title_box.send_keys("Updated Title Testing")
+
+        due_date_box = driver.find_element(By.NAME, "due_date")
+        due_date_box.clear()
 
         # Finding the Description Box and sending some description
         desc_box = driver.find_element(By.NAME, "description")
@@ -154,7 +157,7 @@ class TodoAppE2ETest(unittest.TestCase):
         )
         put_button.click()
 
-        time.sleep(3)  # Wait for Updation
+        time.sleep(5)  # Wait for Updation
 
         # Verify update
         self.assertIn("Updated Title Testing", driver.page_source)
@@ -162,12 +165,14 @@ class TodoAppE2ETest(unittest.TestCase):
 
         # Deleting the record with the fetched task_id
 
+        time.sleep(3)
+
         # Finding the Delete button and clicking it
         delete_btn = driver.find_element(
             By.CLASS_NAME, "btn.btn-danger.button-form.js-tooltip"
         )
         delete_btn.click()
-        time.sleep(1)
+        time.sleep(3)
 
         # Finding the delete button in the alert box(for confirmation)
         # and clicking it to delete the task
@@ -180,7 +185,7 @@ class TodoAppE2ETest(unittest.TestCase):
         # print(delete_form_btn.text)
         delete_form_btn.click()
 
-        time.sleep(4)
+        time.sleep(7)
         # Verifying the deletion of the task
         self.assertIn("204 No Content", driver.page_source)
         print(f"Task with the id:{task_id} is DELETED!")

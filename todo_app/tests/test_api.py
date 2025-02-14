@@ -2,7 +2,6 @@ from rest_framework.test import APITestCase, APIClient
 from django.urls import reverse
 from django.contrib.auth.models import User
 from todo_app.models import Todo
-from django.utils import timezone
 
 
 class TodoAPITest(APITestCase):
@@ -17,7 +16,6 @@ class TodoAPITest(APITestCase):
             title="Integration Test",
             description="Testing API endpoints",
             status="OPEN",
-            due_date=timezone.now(),
             tags="Django, Testing, API",
             user=self.user,
         )

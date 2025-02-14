@@ -59,8 +59,21 @@ jobs:
                 python manage.py runserver 0.0.0.0:8000 &
                 sleep 5     # Give some time to server to start
 
-            - name: Run tests
+            - name: Run Unit Tests
               run: |
-                python manage.py test
+                python manage.py test todo_app.tests.test_models
+                python manage.py test todo_app.tests.test_serializers
+              env:
+                  DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+
+            - name: Run Integration Tests
+              run: |
+                python manage.py test todo_app.tests.test_api
+              env:
+                  DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+
+            - name: Run E2E Tests
+              run: |
+                python manage.py test todo_app.tests.test_e2e
               env:
                   DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
