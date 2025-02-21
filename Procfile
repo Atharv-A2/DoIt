@@ -1,0 +1,1 @@
+web: gunicorn DoIt.wsgi --log-file -
