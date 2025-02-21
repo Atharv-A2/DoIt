@@ -27,7 +27,7 @@ SECRET_KEY = "django-insecure-*ms^dv#86v4&m6h8sq_1i4)i!!o-912(w9-a6-qmzbr5*o51di
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(' ') if not DEBUG else []
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(" ") if not DEBUG else []
 
 
 # Application definition
@@ -76,9 +76,19 @@ WSGI_APPLICATION = "DoIt.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+DB_NAME = "test_db_2wal"
+DB_USER = "test_db_2wal_user"
+DB_PASSWORD = "tsx3jh84SbaW5PFpr3ICEoE6mhfnijIq"
+DB_ADDRESS = "dpg-cusdgbrqf0us739j9mlg-a.oregon-postgres.render.com"
+
 
 DATABASES = {
-    'default': dj_database_url.parse(os.environ.get('DATABASE_URL', 'postgresql://test_db_2wal_user:tsx3jh84SbaW5PFpr3ICEoE6mhfnijIq@dpg-cusdgbrqf0us739j9mlg-a.oregon-postgres.render.com/test_db_2wal'))
+    "default": dj_database_url.parse(
+        os.environ.get(
+            "DATABASE_URL",
+            f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_ADDRESS}/{DB_NAME}",
+        )
+    )
 }
 
 # Password validation
@@ -124,7 +134,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
