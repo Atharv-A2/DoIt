@@ -72,8 +72,9 @@ jobs:
               env:
                   DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
 
-            - name: Run E2E Tests
-              run: |
-                python manage.py test todo_app.tests.test_e2e
-              env:
-                  DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+            # Selenium testing is disabled for now as it is an API testing only
+            # - name: Run E2E Tests
+            #   run: |
+            #     python manage.py test todo_app.tests.test_e2e
+            #   env:
+            #       DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
